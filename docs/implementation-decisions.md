@@ -1,0 +1,14 @@
+# 実装決定記録
+
+## 2026-07-05
+
+- Vite + React + TypeScript + Tailwind CSS で新規実装する。
+- 金額計算は `src/lib/calculator.ts` に集約し、React コンポーネントには複雑な計算を置かない。
+- 入力値はすべて文字列 state として保持し、検証と Decimal 変換は計算層で行う。
+- Tailwind CSS は Vite との安定した組み合わせを優先し、設定ファイル付きの v3 系を使う。
+- レート入力欄は仕様通り必要候補を表示し、CAD/CHF は直接 JPY レートを優先しつつ USD 経由でも計算できるようにする。
+- UI文言は日本語を基本にし、`Lot` や通貨コードなどFXで一般的な表記は英語のまま残す。
+- ビルド成果物を `dist/index.html` から直接開きやすくするため、Vite の `base` は相対パスの `./` にする。
+- `file://` 直開きで外部 module script 読み込みが止まる環境に備え、ビルド後に CSS/JS を `dist/index.html` へインライン化する。
+- インライン化した JS は通常の `<script>` として埋め込み、`file://` 直開き時の module script 制約を避ける。
+- 通常の `<script>` は `<head>` 内で即時実行されるため、React の起動は `DOMContentLoaded` 後に行う。
